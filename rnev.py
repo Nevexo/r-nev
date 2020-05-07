@@ -46,6 +46,7 @@ if __name__ == "__main__":
             bot.load_extension(cog)
         except:
             logger.error(f"Loading failed for {cog}, traceback:")
+            logger.error(traceback.print_exc())
 
 
 @bot.event
