@@ -1,3 +1,10 @@
+package:
+  debug: true
 discord:
-  token: [Your Discord Token]
-  oauth: [Optional, invite link for bot]
+  oauth: Your Oauth Link
+  prefix: r!
+  token: Your Discord Token Here
+extensions:
+  enabled:
+  - cogs.admin
+  - cogs.code
