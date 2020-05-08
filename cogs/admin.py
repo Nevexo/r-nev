@@ -1,4 +1,5 @@
 # Admin specific commands & checks
+import traceback
 
 import discord
 from discord.ext.commands import Cog
@@ -24,6 +25,7 @@ class Admin(Cog):
             self.bot.load_extension(f"cogs.{cog}")
         except:
             await ctx.send(f"Failed to reload, see console.")
+            self.bot.log.error(traceback.exc())
             return
 
         await ctx.send(f"{cog} reloaded.")
