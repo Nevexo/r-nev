@@ -4,6 +4,7 @@ import traceback
 import discord
 from discord.ext.commands import Cog
 from discord.ext import commands
+import re
 
 
 class Admin(Cog):
@@ -54,6 +55,16 @@ class Admin(Cog):
 
         await ctx.send(f"Running config: ```{cfg}```")
 
+    @commands.command()
+    async def emoji(self, ctx):
+        """Get emojjis"""
+        await ctx.message.add_reaction("<:code:708283411986513960>")
+
+    @commands.command()
+    async def reg(self, ctx, *, url: str):
+        """Check git regex"""
+        git_pattern = re.compile("((git|ssh|http(s)?)|(git@[\w\.]+))(:(//)?)([\w\.@\:/\-~]+)(\.git)(/)?")
+        await ctx.send(git_pattern.match(url))
 
 def setup(bot):
     bot.add_cog(Admin(bot))
