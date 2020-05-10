@@ -18,7 +18,7 @@ def config_load():
         config = yaml.load(f.read(), Loader=yaml.FullLoader)
 
     # Update code regex
-    if config['docker'] is not None:
+    if 'regex' in config['docker']:
         code_regex = re.compile(config['docker']['regex'])
     return config
 
@@ -38,6 +38,7 @@ logger.addHandler(handler)
 
 # Create new client instance
 bot = commands.Bot(command_prefix=config['discord']['prefix'])
+logger.info(f"Prefix: {config['discord']['prefix']}")
 
 # Pass helpers to bot instance
 bot.log = logger
@@ -70,30 +71,33 @@ async def on_message(message):
     if message.author.bot:
         return
 
+    ctx = await bot.get_context(message)
+    await bot.invoke(ctx)
+
     # Regex for code module
-    if config['docker'] is not None:
-        if len(code_regex.findall(message.content)) is not 0:
-            # Matches git regex, react to it
-            bot_reaction = await message.add_reaction(config['docker']['code_emoji'])
-            logger.info(f"Reacting to {message.id}, contains git URL {message.content}")
-
-            # Wait 120 seconds for reaction
-            def check(reaction, user):
-                return user == message.author and \
-                       str(reaction.emoji) == config['docker']['code_emoji']
-
-            try:
-                reaction, user = await bot.wait_for('reaction_add', timeout=120.0)
-            except asyncio.TimeoutError:
-                # Timed out, remove the reaction
-                bot_reaction.remove()
-                return
-
-            # User clicked the emoji, call function
-            ctx = bot.get_context(message)
-            await ctx.send(f"R. Nev + {config['docker']['code_emoji']}:\nTo create a new"
-                           f" vs-code server, use the {config['discord']['prefix']}"
-                           f"code <git url> command.")
+    # if 'regex' in config['docker']:
+    #     if len(code_regex.findall(message.content)) is not 0:
+    #         # Matches git regex, react to it
+    #         bot_reaction = await message.add_reaction(config['docker']['code_emoji'])
+    #         logger.info(f"Reacting to {message.id}, contains git URL {message.content}")
+    #
+    #         # Wait 120 seconds for reaction
+    #         def check(reaction, user):
+    #             return user == message.author and \
+    #                    str(reaction.emoji) == config['docker']['code_emoji']
+    #
+    #         try:
+    #             reaction, user = await bot.wait_for('reaction_add', timeout=120.0)
+    #         except asyncio.TimeoutError:
+    #             # Timed out, remove the reaction
+    #             bot_reaction.remove()
+    #             return
+    #
+    #         # User clicked the emoji, call function
+    #         ctx = bot.get_context(message)
+    #         await ctx.send(f"R. Nev + {config['docker']['code_emoji']}:\nTo create a new"
+    #                        f" vs-code server, use the {config['discord']['prefix']}"
+    #                        f"code <git url> command.")
 
 
 bot.run(config['discord']['token'])
