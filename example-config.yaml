@@ -8,3 +8,9 @@ extensions:
   enabled:
   - cogs.admin
   - cogs.code
+  - cogs.dns
+
+dns:
+  # Settings for DNS cog
+  doh:
+    server: cloudflare-dns.com
