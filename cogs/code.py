@@ -143,7 +143,7 @@ async def create_session_interactive(bot, clone_url, ctx):
     msgs.append(f"{datetime.datetime.now().isoformat()} - Running git container"
                 f" git-{session} [cloning {clone_url}]")
     # Create git clone container
-    clone_result = await git_clone(session, clone_url, self.bot.config['docker']['git_image'])
+    clone_result = await git_clone(session, clone_url, bot.config['docker']['git_image'])
     bot.log.info(f"[GIT] [{session}] Clone container shutdown.")
 
     msgs.append(f"{datetime.datetime.now().isoformat()} - Git container stopped.")
@@ -166,8 +166,8 @@ async def create_session_interactive(bot, clone_url, ctx):
 
     logs = '\n'.join(msgs)
     await status_message.edit(content=f"```{logs}```\nYou can now access your code session"
-                                      f" at {self.bot.config['docker']['proxy_proto']}://"
-                                      f"code-{session}{self.bot.config['docker']['proxy_base']}")
+                                      f" at {bot.config['docker']['proxy_proto']}://"
+                                      f"code-{session}{bot.config['docker']['proxy_base']}")
 
 class Code(Cog):
     def __init__(self, bot):
